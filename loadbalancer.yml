@@ -1,0 +1,17 @@
+  {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "consul-lb"
+      },
+      "spec": {
+        "ports": [{
+          "port": 8400,
+          "targetPort": 8400
+        }],
+        "selector": {
+          "app": "consul"
+        },
+        "type": "LoadBalancer"
+      }
+    }
