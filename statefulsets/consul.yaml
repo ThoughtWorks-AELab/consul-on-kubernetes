@@ -25,7 +25,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: consul
-          image: "consul:0.9.1"
+          image: "consul:1.0.0"
           env:
             - name: POD_IP
               valueFrom:
@@ -96,7 +96,7 @@ spec:
             name: consul
         - name: tls
           secret:
-            secretName: consul  
+            secretName: consul
   volumeClaimTemplates:
     - metadata:
         name: data
