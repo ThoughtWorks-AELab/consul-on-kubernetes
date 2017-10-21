@@ -3,6 +3,9 @@ kind: StatefulSet
 metadata:
   name: consul
 spec:
+  selector:
+    matchLabels:
+      app: consul
   serviceName: consul
   replicas: 3
   template:
@@ -11,6 +14,13 @@ spec:
         app: consul
     spec:
       affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeType
+                operator: In
+                values: ["private"]
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
