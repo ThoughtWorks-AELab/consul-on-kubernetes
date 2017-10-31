@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-set -e
+
 DIR_OF_ME=$(dirname $0)
 DNS_ROOT=$1
 if [[ -z $SUB_ACCOUNT_ID ]]; then
@@ -35,9 +35,9 @@ fi;
 #   return $RC
 # fi;
 
-EXISTS=$(kubectl describe secrets consul)
+EXISTS=$(kubectl describe secrets consul 2>&1)
 RC=$?
-if [[ RC == 1 ]]; then
+if [[ $RC == 1 ]]; then
   echo "creating new secret"
   cfssl gencert -initca ca/ca-csr.json | cfssljson -bare ca
   cfssl gencert -ca=ca.pem  -ca-key=ca-key.pem -config=ca/ca-config.json -profile=default ca/consul-csr.json | cfssljson -bare consul
@@ -47,9 +47,9 @@ else
 fi
 EXISTS=$(kubectl describe configmap consul)
 RC=$?
-if [[ RC == 1 ]]; then
+if [[ $RC == 1 ]]; then
+  echo "setup consul pods"
   kubectl create configmap consul --from-file=configs/server.json
 fi
-
 kubectl apply -f services/consul.yaml
 kubectl apply -f statefulsets/consul.yaml
