@@ -1,4 +1,28 @@
 #!/bin/sh
+DIR_OF_ME=$(dirname $0)
+DNS_ROOT=$1
+if [[ -z $SUB_ACCOUNT_ID ]]; then
+    echo "FATAL: \$SUB_ACCOUNT_ID not set"
+    exit 1
+fi
+
+if [[ -z $DNS_ROOT ]]; then
+    echo "FATAL: \$DNS_ROOT not set"
+    exit 1
+fi
+CLUSTER=k8.$DNS_ROOT
+echo "cluster is->$CLUSTER"
+
+# # setup kubectl
+echo "Setup kubectl"
+CONTEXT_RESULT=$($DIR_OF_ME/assume_sub_account.sh $SUB_ACCOUNT_ID "kops export kubecfg $CLUSTER --state s3://di_tf_user_bucket")
+RC=$?
+if [[ $RC == 0 ]]; then
+  echo "Context setup"
+else
+  echo "context failed"
+  return $RC
+fi;
 
 rm ca-key.pem ca.csr ca.pem consul-key.pem consul.csr consul.pem
 kubectl delete statefulset consul
