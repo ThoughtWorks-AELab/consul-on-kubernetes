@@ -1,15 +1,4 @@
 version: 2.0
-workflows:
-  version: 2
-  consul:
-    jobs:
-      - add-consul
-      - approve-delete-consul:
-         type: approval
-      - delete-consul:
-         requires:
-           - approve-delete-consul
-
 jobs:
   add-consul:
     docker:
@@ -33,6 +22,7 @@ jobs:
       - checkout
       - run:
           command: ./cleanup "sandbox.twdps.io"
+
 workflows:
   version: 2
   consul:
